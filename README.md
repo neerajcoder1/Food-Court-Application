@@ -42,12 +42,11 @@ To reset the system to a completely fresh state (0 orders, 0 users) during devel
 2. Log in using a Student, Teacher, or Staff account.
 3. (Optional) Run `seed_menu.js` to populate the menu for testing.
 
----
-
 ### 🎨 Design Credits
 - **UI/UX**: Modern Glassmorphism & 3D Design
 - **Engineering**: VisionX Team
---
+  
+---
 
 - Member 2- **Prince Dubey** [ Vendor Dashboard ]
 # 🍱 CafeteriaToken — Vendor Dashboard
