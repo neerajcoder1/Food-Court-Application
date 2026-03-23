@@ -825,7 +825,7 @@ body {
   color: var(--text-secondary);
 }
 
-.payment-card input:checked+.card-content {
+.payment-card input:checked + .card-content {
   border-color: var(--primary);
   background: rgba(56, 189, 248, 0.05);
 }
@@ -861,6 +861,44 @@ body {
   margin-top: 0.5rem;
 }
 
+.qr-card {
+  display: none;
+  margin: 1.5rem 0 0;
+  padding: 1rem;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.qr-help {
+  margin: 0.4rem 0 0.9rem;
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+}
+
+.qr-canvas {
+  width: 200px;
+  height: 200px;
+  margin: 0 auto;
+  padding: 10px;
+  border-radius: 14px;
+  background: #ffffff;
+}
+
+.qr-canvas img,
+.qr-canvas canvas {
+  width: 100% !important;
+  height: 100% !important;
+  display: block;
+}
+
+.qr-order-id {
+  margin-top: 0.75rem;
+  color: var(--text-secondary);
+  font-size: 0.85rem;
+  word-break: break-all;
+}
+
 /* High-End 3D Status Tracker */
 .status-tracker {
   display: flex;
@@ -891,7 +929,9 @@ body {
   background: var(--primary);
   border-radius: 10px;
   z-index: 0;
-  transition: width 0.8s cubic-bezier(0.34, 1.56, 0.64, 1), background 0.5s ease;
+  transition:
+    width 0.8s cubic-bezier(0.34, 1.56, 0.64, 1),
+    background 0.5s ease;
   box-shadow: 0 0 15px var(--primary-glow);
 }
 
@@ -917,41 +957,59 @@ body {
   justify-content: center;
   font-size: 1.2rem;
   transition: all 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
-  box-shadow: 
-    inset 0 4px 6px rgba(255,255,255,0.05),
-    0 4px 10px rgba(0,0,0,0.3);
+  box-shadow:
+    inset 0 4px 6px rgba(255, 255, 255, 0.05),
+    0 4px 10px rgba(0, 0, 0, 0.3);
   transform-style: preserve-3d;
 }
 
 /* Step Specific Colors */
-.status-step#step-waiting.active { color: #f97316; }
+.status-step#step-waiting.active {
+  color: #f97316;
+}
 .status-step#step-waiting.active .step-dot {
   background: radial-gradient(circle at 30% 30%, #fb923c, #f97316);
   border-color: #fdba74;
-  box-shadow: 0 0 25px rgba(249, 115, 22, 0.5), inset 0 0 10px rgba(255,255,255,0.2);
+  box-shadow:
+    0 0 25px rgba(249, 115, 22, 0.5),
+    inset 0 0 10px rgba(255, 255, 255, 0.2);
   transform: translateZ(20px) scale(1.1);
 }
 
-.status-step#step-preparing.active { color: #3b82f6; }
+.status-step#step-preparing.active {
+  color: #3b82f6;
+}
 .status-step#step-preparing.active .step-dot {
   background: radial-gradient(circle at 30% 30%, #60a5fa, #3b82f6);
   border-color: #93c5fd;
-  box-shadow: 0 0 25px rgba(59, 130, 246, 0.5), inset 0 0 10px rgba(255,255,255,0.2);
+  box-shadow:
+    0 0 25px rgba(59, 130, 246, 0.5),
+    inset 0 0 10px rgba(255, 255, 255, 0.2);
   transform: translateZ(20px) scale(1.1);
 }
 
-.status-step#step-ready.active { color: #22c55e; }
+.status-step#step-ready.active {
+  color: #22c55e;
+}
 .status-step#step-ready.active .step-dot {
   background: radial-gradient(circle at 30% 30%, #4ade80, #22c55e);
   border-color: #86efac;
-  box-shadow: 0 0 35px rgba(34, 197, 94, 0.7), inset 0 0 10px rgba(255,255,255,0.2);
+  box-shadow:
+    0 0 35px rgba(34, 197, 94, 0.7),
+    inset 0 0 10px rgba(255, 255, 255, 0.2);
   transform: translateZ(30px) scale(1.2);
   animation: readyPulse 1.5s infinite alternate;
 }
 
 @keyframes readyPulse {
-  from { transform: translateZ(30px) scale(1.2); box-shadow: 0 0 35px rgba(34, 197, 94, 0.7); }
-  to { transform: translateZ(40px) scale(1.3); box-shadow: 0 0 60px rgba(34, 197, 94, 1); }
+  from {
+    transform: translateZ(30px) scale(1.2);
+    box-shadow: 0 0 35px rgba(34, 197, 94, 0.7);
+  }
+  to {
+    transform: translateZ(40px) scale(1.3);
+    box-shadow: 0 0 60px rgba(34, 197, 94, 1);
+  }
 }
 
 /* Celebration Burst (Confetti) */
@@ -965,7 +1023,9 @@ body {
   z-index: 1000;
 }
 
-.confetti-container.active { display: flex; }
+.confetti-container.active {
+  display: flex;
+}
 
 .particle {
   position: absolute;
@@ -981,8 +1041,14 @@ body {
 }
 
 @keyframes confettiBurst {
-  0% { transform: translate(0, 0) scale(1); opacity: 1; }
-  100% { transform: translate(var(--tx), var(--ty)) rotate(var(--rot)) scale(0); opacity: 0; }
+  0% {
+    transform: translate(0, 0) scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(var(--tx), var(--ty)) rotate(var(--rot)) scale(0);
+    opacity: 0;
+  }
 }
 
 .mini-list {
@@ -1024,15 +1090,21 @@ body {
   inset: 0;
   z-index: -1;
   background:
-    radial-gradient(ellipse 80% 60% at 20% 20%,
+    radial-gradient(
+      ellipse 80% 60% at 20% 20%,
       rgba(251, 146, 60, 0.13) 0%,
-      transparent 60%),
-    radial-gradient(ellipse 60% 80% at 80% 80%,
+      transparent 60%
+    ),
+    radial-gradient(
+      ellipse 60% 80% at 80% 80%,
       rgba(34, 197, 94, 0.1) 0%,
-      transparent 60%),
-    radial-gradient(ellipse 70% 50% at 50% 50%,
+      transparent 60%
+    ),
+    radial-gradient(
+      ellipse 70% 50% at 50% 50%,
       rgba(59, 130, 246, 0.07) 0%,
-      transparent 70%),
+      transparent 70%
+    ),
     #0f172a;
 }
 
@@ -1090,18 +1162,22 @@ body {
   top: 10vh;
   width: 6px;
   height: 150px;
-  background: linear-gradient(to bottom,
-      transparent,
-      var(--primary) 20%,
-      var(--accent) 50%,
-      var(--primary) 80%,
-      transparent);
+  background: linear-gradient(
+    to bottom,
+    transparent,
+    var(--primary) 20%,
+    var(--accent) 50%,
+    var(--primary) 80%,
+    transparent
+  );
   border-radius: 10px;
   z-index: 1001;
   opacity: 0.6;
   box-shadow: 0 0 20px var(--primary-glow);
   cursor: ns-resize;
-  transition: opacity 0.2s, width 0.2s;
+  transition:
+    opacity 0.2s,
+    width 0.2s;
   user-select: none;
   touch-action: none;
 }
@@ -1165,7 +1241,9 @@ body {
 .menu-card:hover {
   transform: translateY(-8px) scale(1.02);
   border-color: var(--accent);
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4), 0 0 20px var(--primary-glow);
+  box-shadow:
+    0 20px 40px rgba(0, 0, 0, 0.4),
+    0 0 20px var(--primary-glow);
 }
 
 .menu-card:active {
@@ -1374,7 +1452,6 @@ body {
   cursor: pointer;
 }
 
-
 /* Custom Select Dropdown */
 .custom-select {
   position: relative;
@@ -1466,7 +1543,6 @@ body {
   background: rgba(249, 115, 22, 0.1);
   color: var(--primary);
 }
-
 
 /* --- Responsive Design --- */
 
@@ -1590,6 +1666,11 @@ body {
     text-align: center;
     justify-content: center;
   }
+
+  .qr-canvas {
+    width: 170px;
+    height: 170px;
+  }
 }
 /* === Order History === */
 .history-container {
@@ -1611,7 +1692,7 @@ body {
 
 .history-card:hover {
   border-color: var(--primary);
-  box-shadow: 0 8px 24px rgba(0,0,0,0.25);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
   transform: translateY(-2px);
 }
 
@@ -1668,10 +1749,22 @@ body {
   letter-spacing: 0.5px;
 }
 
-.status-badge.pending  { background: var(--yellow-soft); color: var(--yellow); }
-.status-badge.preparing { background: var(--blue-soft); color: var(--blue); }
-.status-badge.ready    { background: var(--green-soft); color: var(--green); }
-.status-badge.completed { background: var(--green-soft); color: var(--green); }
+.status-badge.pending {
+  background: var(--yellow-soft);
+  color: var(--yellow);
+}
+.status-badge.preparing {
+  background: var(--blue-soft);
+  color: var(--blue);
+}
+.status-badge.ready {
+  background: var(--green-soft);
+  color: var(--green);
+}
+.status-badge.completed {
+  background: var(--green-soft);
+  color: var(--green);
+}
 
 .history-empty {
   text-align: center;
@@ -1685,9 +1778,10 @@ body {
 }
 
 @media screen and (max-width: 768px) {
-  .history-label { display: none; }
+  .history-label {
+    display: none;
+  }
 }
-
 
 /* --- 3D Delete Button for History --- */
 .delete-history-btn {
@@ -1702,7 +1796,7 @@ body {
   justify-content: center;
   cursor: pointer;
   transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-  box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
   margin-left: 10px;
   position: relative;
   overflow: hidden;
@@ -1730,8 +1824,12 @@ body {
 }
 
 @keyframes trashShake {
-  from { transform: rotate(-10deg); }
-  to { transform: rotate(10deg); }
+  from {
+    transform: rotate(-10deg);
+  }
+  to {
+    transform: rotate(10deg);
+  }
 }
 
 .history-card.removing {
@@ -1739,6 +1837,12 @@ body {
 }
 
 @keyframes cardFadeOut {
-  to { opacity: 0; transform: translateX(50px) scale(0.9); height: 0; margin-bottom: 0; padding: 0; border: none; }
+  to {
+    opacity: 0;
+    transform: translateX(50px) scale(0.9);
+    height: 0;
+    margin-bottom: 0;
+    padding: 0;
+    border: none;
+  }
 }
-

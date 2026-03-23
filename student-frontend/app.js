@@ -15,7 +15,7 @@ document.addEventListener("DOMContentLoaded", () => {
   updateCartUI();
   initTheme();
   startOrderTracking(); // Check for active order tracking on load
-  initCustomSelect();   // Init custom role selector
+  initCustomSelect(); // Init custom role selector
 });
 
 // --- User Accounts Management ---
@@ -34,7 +34,9 @@ function checkAuth() {
 
     // Only show cart and history for roles that can order
     const canOrder = ["student", "teacher", "staff"].includes(user.role);
-    document.getElementById("cart-btn").style.display = canOrder ? "flex" : "none";
+    document.getElementById("cart-btn").style.display = canOrder
+      ? "flex"
+      : "none";
     const histBtn = document.getElementById("history-btn");
     if (histBtn) histBtn.style.display = canOrder ? "flex" : "none";
 
@@ -141,12 +143,12 @@ function handleSignup(e) {
 
 function logout() {
   localStorage.removeItem("cffms_user");
-  window.location.reload(); 
+  window.location.reload();
 }
 
 /**
  * DEVELOPER UTILITY
- * Run in console: resetSystem() 
+ * Run in console: resetSystem()
  * Purpose: Clears all local data (orders, hidden history, users) to start fresh.
  */
 function resetSystem() {
@@ -633,7 +635,9 @@ function closeRazorModal() {
 }
 
 function selectRazorOpt(el) {
-  document.querySelectorAll(".razor-opt").forEach((opt) => opt.classList.remove("active"));
+  document
+    .querySelectorAll(".razor-opt")
+    .forEach((opt) => opt.classList.remove("active"));
   el.classList.add("active");
 }
 
@@ -704,12 +708,51 @@ function generateToken() {
   saveOrderToStorage(order);
   sessionStorage.setItem("lastOrderId", order.id); // Track this order
 
+  // Generate pickup QR for quick scan at the counter
+  renderOrderQr(order);
+
   cart = []; // Clear cart
   updateCartUI();
   showView("token-view");
 
   // Start Real Status Tracking
   startOrderTracking();
+}
+
+function renderOrderQr(order) {
+  const qrCard = document.getElementById("order-qr-card");
+  const qrTarget = document.getElementById("order-qr");
+  const qrOrderId = document.getElementById("qr-order-id");
+
+  if (!qrCard || !qrTarget) return;
+
+  const qrPayload = {
+    app: "CFFMS",
+    orderId: order.id,
+    token: order.token,
+    amount: order.total,
+    payment: order.payment,
+    name: order.name,
+  };
+
+  qrTarget.innerHTML = "";
+  qrCard.style.display = "block";
+  if (qrOrderId) qrOrderId.innerText = `Order ID: ${order.id}`;
+
+  if (typeof window.QRCode !== "function") {
+    qrTarget.innerHTML =
+      '<p style="color:#111;font-weight:700;font-size:12px;padding:10px">QR library failed to load</p>';
+    return;
+  }
+
+  new window.QRCode(qrTarget, {
+    text: JSON.stringify(qrPayload),
+    width: 180,
+    height: 180,
+    colorDark: "#111111",
+    colorLight: "#ffffff",
+    correctLevel: window.QRCode.CorrectLevel.H,
+  });
 }
 
 // helper to add order to shared storage
@@ -730,15 +773,29 @@ function startOrderTracking() {
     if (order) {
       const stepConfig = {
         pending: { steps: ["step-waiting"], width: "0%", color: "#f97316" },
-        preparing: { steps: ["step-waiting", "step-preparing"], width: "50%", color: "#3b82f6" },
-        ready: { steps: ["step-waiting", "step-preparing", "step-ready"], width: "100%", color: "#22c55e" },
-        completed: { steps: ["step-waiting", "step-preparing", "step-ready"], width: "100%", color: "#22c55e" },
+        preparing: {
+          steps: ["step-waiting", "step-preparing"],
+          width: "50%",
+          color: "#3b82f6",
+        },
+        ready: {
+          steps: ["step-waiting", "step-preparing", "step-ready"],
+          width: "100%",
+          color: "#22c55e",
+        },
+        completed: {
+          steps: ["step-waiting", "step-preparing", "step-ready"],
+          width: "100%",
+          color: "#22c55e",
+        },
       };
 
       const config = stepConfig[order.status] || stepConfig.pending;
 
       // Update Dots and Labels
-      document.querySelectorAll(".status-step").forEach((s) => s.classList.remove("active"));
+      document
+        .querySelectorAll(".status-step")
+        .forEach((s) => s.classList.remove("active"));
       config.steps.forEach((id) => {
         const el = document.getElementById(id);
         if (el) el.classList.add("active");
@@ -755,7 +812,7 @@ function startOrderTracking() {
       if (order.status === "ready") {
         // Show Toast
         showToast("Your order is READY at the counter! 🍱 ✅");
-        
+
         // Celebration Animation (Burst)
         const confetti = document.getElementById("confetti-container");
         if (confetti && !confetti.classList.contains("active")) {
@@ -863,13 +920,15 @@ function initDraggableBar() {
     function updateScrollFromBar() {
       const maxBarTop = window.innerHeight - bar.offsetHeight;
       const scrollPct = bar.offsetTop / maxBarTop;
-      const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+      const maxScroll =
+        document.documentElement.scrollHeight - window.innerHeight;
       window.scrollTo(0, scrollPct * maxScroll);
     }
 
     function updateBarFromScroll() {
       if (isDragging) return;
-      const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+      const maxScroll =
+        document.documentElement.scrollHeight - window.innerHeight;
       if (maxScroll <= 0) return;
       const scrollPct = window.scrollY / maxScroll;
       const maxBarTop = window.innerHeight - bar.offsetHeight;
@@ -910,50 +969,48 @@ function initDraggableBar() {
 initTheme();
 initDraggableBar();
 
-
 // --- Custom Role Selector Logic ---
 function initCustomSelect() {
-  const customSelect = document.getElementById('custom-role-select');
+  const customSelect = document.getElementById("custom-role-select");
   if (!customSelect) return;
 
-  const trigger = customSelect.querySelector('.select-trigger');
-  const triggerText = trigger.querySelector('span');
-  const optionsContainer = customSelect.querySelector('.custom-options');
-  const options = customSelect.querySelectorAll('.custom-option');
-  const hiddenInput = document.getElementById('login-role');
+  const trigger = customSelect.querySelector(".select-trigger");
+  const triggerText = trigger.querySelector("span");
+  const optionsContainer = customSelect.querySelector(".custom-options");
+  const options = customSelect.querySelectorAll(".custom-option");
+  const hiddenInput = document.getElementById("login-role");
 
-  trigger.addEventListener('click', (e) => {
+  trigger.addEventListener("click", (e) => {
     e.stopPropagation();
-    customSelect.classList.toggle('open');
+    customSelect.classList.toggle("open");
   });
 
-  options.forEach(option => {
-    option.addEventListener('click', (e) => {
+  options.forEach((option) => {
+    option.addEventListener("click", (e) => {
       e.stopPropagation();
-      const value = option.getAttribute('data-value');
+      const value = option.getAttribute("data-value");
       const text = option.innerText;
 
       // Update UI
       triggerText.innerText = text;
-      options.forEach(opt => opt.classList.remove('selected'));
-      option.classList.add('selected');
+      options.forEach((opt) => opt.classList.remove("selected"));
+      option.classList.add("selected");
 
       // Update hidden input
       hiddenInput.value = value;
 
       // Close dropdown
-      customSelect.classList.remove('open');
-      
+      customSelect.classList.remove("open");
+
       // Trigger change for logo sync if needed
-      hiddenInput.dispatchEvent(new Event('change'));
+      hiddenInput.dispatchEvent(new Event("change"));
     });
   });
 
-  document.addEventListener('click', () => {
-    customSelect.classList.remove('open');
+  document.addEventListener("click", () => {
+    customSelect.classList.remove("open");
   });
 }
-
 
 // =============================================
 // ORDER HISTORY & SOUND NOTIFICATION
@@ -961,70 +1018,113 @@ function initCustomSelect() {
 function playReadyChime() {
   try {
     var ctx = new (window.AudioContext || window.webkitAudioContext)();
-    [523.25, 659.25, 783.99].forEach(function(freq, i) {
+    [523.25, 659.25, 783.99].forEach(function (freq, i) {
       var osc = ctx.createOscillator();
       var gain = ctx.createGain();
       osc.connect(gain);
       gain.connect(ctx.destination);
-      osc.type = 'sine';
+      osc.type = "sine";
       osc.frequency.setValueAtTime(freq, ctx.currentTime + i * 0.18);
       gain.gain.setValueAtTime(0.4, ctx.currentTime + i * 0.18);
-      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + i * 0.18 + 0.6);
+      gain.gain.exponentialRampToValueAtTime(
+        0.001,
+        ctx.currentTime + i * 0.18 + 0.6,
+      );
       osc.start(ctx.currentTime + i * 0.18);
       osc.stop(ctx.currentTime + i * 0.18 + 0.6);
     });
-  } catch(e) { console.warn('Audio not supported:', e); }
+  } catch (e) {
+    console.warn("Audio not supported:", e);
+  }
 }
 
 function showHistory() {
-  showView('history-view');
+  showView("history-view");
   renderOrderHistory();
 }
 
 function renderOrderHistory() {
-  var user = JSON.parse(localStorage.getItem('cffms_user'));
-  var allOrders = JSON.parse(localStorage.getItem('cffms_orders')) || [];
-  var hiddenOrders = JSON.parse(localStorage.getItem('cffms_hidden_orders')) || [];
-  var container = document.getElementById('history-list');
+  var user = JSON.parse(localStorage.getItem("cffms_user"));
+  var allOrders = JSON.parse(localStorage.getItem("cffms_orders")) || [];
+  var hiddenOrders =
+    JSON.parse(localStorage.getItem("cffms_hidden_orders")) || [];
+  var container = document.getElementById("history-list");
   if (!container) return;
 
-  var myOrders = user ? allOrders.filter(function(o) { 
-    return o.name === user.name && !hiddenOrders.includes(o.id); 
-  }).reverse() : [];
+  var myOrders = user
+    ? allOrders
+        .filter(function (o) {
+          return o.name === user.name && !hiddenOrders.includes(o.id);
+        })
+        .reverse()
+    : [];
 
   if (myOrders.length === 0) {
-    container.innerHTML = '<div class="history-empty"><div class="empty-icon">📋</div><p>No orders yet. Place your first order!</p><button class="primary-btn" onclick="showView(\'menu-view\')" style="margin-top:1rem">Browse Menu</button></div>';
+    container.innerHTML =
+      '<div class="history-empty"><div class="empty-icon">📋</div><p>No orders yet. Place your first order!</p><button class="primary-btn" onclick="showView(\'menu-view\')" style="margin-top:1rem">Browse Menu</button></div>';
     return;
   }
-  var labels = { pending:'Pending', preparing:'🔵 Preparing', ready:'✅ Ready', completed:'✅ Done' };
-  container.innerHTML = myOrders.map(function(o) {
-    var items = o.items.map(function(i){ return i.name+' x'+i.qty; }).join(', ');
-    var lbl = labels[o.status] || 'Pending';
-    return '<div class="history-card" id="hist-'+o.id+'">'
-      +'<div class="history-card-header"><span class="history-token">#'+o.token+'</span>'
-      +'<div style="display:flex; align-items:center">'
-      +'<div style="text-align:right"><span class="status-badge '+(o.status||'pending')+'">'+lbl+'</span>'
-      +'<div class="history-time">'+(o.time||'')+'</div></div>'
-      +'<button class="delete-history-btn" onclick="removeFromHistory(\''+o.id+'\')" title="Hide from History"><span class="icon">🗑️</span></button>'
-      +'</div></div>'
-      +'<div class="history-items">'+items+'</div>'
-      +'<div class="history-footer"><span class="history-total">&#8377;'+o.total+'</span>'
-      +'<span class="history-payment">&#128179; '+(o.payment||'Cash')+'</span></div></div>';
-  }).join('');
+  var labels = {
+    pending: "Pending",
+    preparing: "🔵 Preparing",
+    ready: "✅ Ready",
+    completed: "✅ Done",
+  };
+  container.innerHTML = myOrders
+    .map(function (o) {
+      var items = o.items
+        .map(function (i) {
+          return i.name + " x" + i.qty;
+        })
+        .join(", ");
+      var lbl = labels[o.status] || "Pending";
+      return (
+        '<div class="history-card" id="hist-' +
+        o.id +
+        '">' +
+        '<div class="history-card-header"><span class="history-token">#' +
+        o.token +
+        "</span>" +
+        '<div style="display:flex; align-items:center">' +
+        '<div style="text-align:right"><span class="status-badge ' +
+        (o.status || "pending") +
+        '">' +
+        lbl +
+        "</span>" +
+        '<div class="history-time">' +
+        (o.time || "") +
+        "</div></div>" +
+        '<button class="delete-history-btn" onclick="removeFromHistory(\'' +
+        o.id +
+        '\')" title="Hide from History"><span class="icon">🗑️</span></button>' +
+        "</div></div>" +
+        '<div class="history-items">' +
+        items +
+        "</div>" +
+        '<div class="history-footer"><span class="history-total">&#8377;' +
+        o.total +
+        "</span>" +
+        '<span class="history-payment">&#128179; ' +
+        (o.payment || "Cash") +
+        "</span></div></div>"
+      );
+    })
+    .join("");
 }
 
 function removeFromHistory(orderId) {
-  const card = document.getElementById('hist-' + orderId);
+  const card = document.getElementById("hist-" + orderId);
   if (card) {
-    card.classList.add('removing');
-    setTimeout(function() {
+    card.classList.add("removing");
+    setTimeout(function () {
       // Add to hidden list instead of deleting from master list
-      let hiddenOrders = JSON.parse(localStorage.getItem('cffms_hidden_orders')) || [];
+      let hiddenOrders =
+        JSON.parse(localStorage.getItem("cffms_hidden_orders")) || [];
       if (!hiddenOrders.includes(orderId)) {
         hiddenOrders.push(orderId);
       }
-      localStorage.setItem('cffms_hidden_orders', JSON.stringify(hiddenOrders));
-      
+      localStorage.setItem("cffms_hidden_orders", JSON.stringify(hiddenOrders));
+
       // Refresh UI (removes from student view only)
       renderOrderHistory();
     }, 500);
