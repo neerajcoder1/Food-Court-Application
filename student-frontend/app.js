@@ -726,14 +726,19 @@ function renderOrderQr(order) {
 
   if (!qrCard || !qrTarget) return;
 
-  const qrPayload = {
-    app: "CFFMS",
-    orderId: order.id,
-    token: order.token,
-    amount: order.total,
-    payment: order.payment,
-    name: order.name,
-  };
+  const itemLines = (order.items || []).map(
+    (it) => `* ${it.name} x${it.qty || 1}`,
+  );
+  const qrPayload = [
+    "CFFMS ORDER",
+    `Order ID: ${order.id}`,
+    `Token: ${order.token}`,
+    `Student: ${order.name}`,
+    `Payment: ${order.payment}`,
+    `Total: Rs ${order.total}`,
+    "Items:",
+    ...(itemLines.length ? itemLines : ["* No items"]),
+  ].join("\n");
 
   qrTarget.innerHTML = "";
   qrCard.style.display = "block";
@@ -746,7 +751,7 @@ function renderOrderQr(order) {
   }
 
   new window.QRCode(qrTarget, {
-    text: JSON.stringify(qrPayload),
+    text: qrPayload,
     width: 180,
     height: 180,
     colorDark: "#111111",
